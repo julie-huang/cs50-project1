@@ -21,17 +21,16 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
 @app.route("/")
 def index():
+
     return render_template("index.html")
+
+@app.route("/register")
+def register():
+    return render_template("register.html")
 
 @app.route("/login")
 def login():
+    # get form info
     return render_template("login.html")
-
-@app.route("/search", methods=["POST"])
-def home():
-    name = request.form.get("username") # take the request the user made, access the form,
-    password = request.form.get("password")                                # and store the field called `name` in a Python variable also called `name`
-    return render_template("search.html", username=username, password=password)
