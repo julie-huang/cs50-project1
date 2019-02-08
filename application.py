@@ -1,10 +1,11 @@
 import os
 import requests
 
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, request, redirect
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+
 
 app = Flask(__name__)
 
@@ -23,14 +24,37 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-
     return render_template("index.html")
 
 @app.route("/register")
 def register():
     return render_template("register.html")
 
-@app.route("/login")
+@app.route("/login", methods=['GET','POST'])
 def login():
+    error=""
     # get form info
+    if request.method =='POST':
+        username=requests.form['username']
+        password=requests.form['password']
+        user=db.execute("SELECT * FROM users WHERE username=:username and password=:password",{"username":username,"password":password}).fetchone()
+
+        if user is None:
+            error="Invalid Login"
+            return render_template("index.html", error=error)
+        else:
+            session['logged_in']=True
+            return redirect(url_for('home'))
+
     return render_template("login.html")
+
+
+
+
+
+
+
+
+@app.route("/home")
+def home():
+    return render_template("home.html")
