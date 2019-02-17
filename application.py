@@ -40,10 +40,10 @@ def login():
         user=db.execute("SELECT * FROM users WHERE username=:username and password=:password",{"username":username,"password":password}).fetchone()
 
         if user is None:
-            error="Invalid login, please try again"
+            error="Invalid username and or password, please try again"
             return render_template("error.html", message=error)
         else:
-            session['logged_in']=True
+            session['username']=True
             return render_template("home.html")
 
     return render_template("login.html")
