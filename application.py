@@ -35,25 +35,18 @@ def login():
     error=""
     # get form info
     if request.method =='POST':
-        username=requests.form['username']
-        password=requests.form['password']
+        username=request.form['username']
+        password=request.form['password']
         user=db.execute("SELECT * FROM users WHERE username=:username and password=:password",{"username":username,"password":password}).fetchone()
 
         if user is None:
-            error="Invalid Login"
-            return render_template("index.html", error=error)
+            error="Invalid login, please try again"
+            return render_template("error.html", message=error)
         else:
             session['logged_in']=True
-            return redirect(url_for('home'))
+            return render_template("home.html")
 
     return render_template("login.html")
-
-
-
-
-
-
-
 
 @app.route("/home")
 def home():

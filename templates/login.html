@@ -11,16 +11,16 @@
     </div>
 
     <div class="mx-auto">
-    <form style="border:1px black solid; border-radius:10px; padding:10px">
+    <form action={{url_for('login')}} method="post">
         <div class="form-group col-12">
           <p class="lead">Sign In Here </p>
           <label for="username">Username</label>
-          <input type="text" class="form-control" id="username" placeholder="Enter username">
+          <input name="username" type="text" class="form-control" id="username" placeholder="Enter username">
         </div>
         <div class="form-group col-12">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password"> <br>
-          <button href="/search" type="submit" class="btn btn-primary">Login</button>
+          <input name="password" type="password" class="form-control" id="password" placeholder="Password"> <br>
+          <button href="/home" type="submit" class="btn btn-primary">Login</button>
         </div>
       </form>
     </div>
