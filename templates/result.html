@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+  <div class="col-lg-12 text-center">
+    <h1 class="mt-5"> greatReads </h1> <br>
+    <div class="list-group">
+      {% for entry in results %}
+      <a href="{{ url_for('books', isbn=entry.isbn) }}" class="list-group-item list-group-item-action">{{ entry.title }} by {{ entry.author }}<br>ISBN: {{ entry.isbn }}</a>
+      {% else %}
+          <p class="lead">Cannot find the title you're looking for. Please try again!</p>
+      {% endfor %}
+      </div>
+  </div>
+</div>
+
+{% endblock %}
+
