@@ -52,6 +52,7 @@ def login():
 @app.route("/search", methods=['GET', 'POST'])
 def search(): 
     error=""
+    name=request.form.get('username')
     if request.method =='POST':
         q = request.form['q']
         search_query = '%' + q + '%'
@@ -67,7 +68,7 @@ def search():
         else: 
             return render_template("result.html", results=data)
 
-    return render_template("search.html", results=data)
+    return render_template("search.html", results=data, name=name)
 
 @app.route("/result")
 def result():
