@@ -1,5 +1,6 @@
-html, body {
-  height:100%;
+html,
+body {
+  height: 100%;
 }
 
 .container {
@@ -12,5 +13,9 @@ html, body {
 }
 
 .b {
-  border:thin black solid;
+  border: thin black solid;
+}
+
+#rank option {
+  width: 150px;
 }

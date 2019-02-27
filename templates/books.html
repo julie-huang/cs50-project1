@@ -1,13 +1,29 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <div class="container">
-        <div class="col-lg-12 text-center">
-            <h1 class="mt-5"> greatReads </h1> <br>
-                <h2 class="mt-5">{{ book.title }} by {{ book.author }} ({{ book.year }})</h3><br>
-            <p class="lead">
-                ISBN: {{ book.isbn }}</p><br>
+<div class="container">
+    <div class="col-lg-12 text-center">
+        <h1 class="mt-5"> greatReads </h1> <br>
+        <h2 class="mt-5">{{ book.title }} by {{ book.author }} ({{ book.year }})</h2><br>
+        <p class="lead">ISBN: {{ book.isbn }}</p><br>
+        <div class="mx-auto">
+            <form style="border:1px black solid; border-radius:10px; padding:10px">
+                <div class="form-group col-12">
+                    <p class="lead">Submit a Review</p>
+                    <label for="rank">Please rank the title:</label>
+                    <select class="form-control" id="rank">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select> <br>
+                    <textarea name="paragraph_text" cols="50" rows="5"></textarea> <br>
+                    <button href="/submitted" type="submit" class="btn btn-primary">Submit Review</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
 {% endblock %}
