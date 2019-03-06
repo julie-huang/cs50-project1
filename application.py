@@ -1,7 +1,7 @@
 import os
 import requests
 
-from flask import Flask, session, render_template, request, redirect, jsonify
+from flask import Flask, session, render_template, request, redirect, jsonify, flash, url_for
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -22,6 +22,14 @@ Session(app)
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
+
+
+def review_counts(isbn):
+    url = 'https://www.goodreads.com/book/review_counts.json'
+    payload = {'isbns': isbn}
+    r = requests.get(url, params=payload)
+    r_dict = r.json()['books'][0]
+    return r_dict
 
 
 @app.route("/")
@@ -70,6 +78,13 @@ def login():
     return render_template("login.html")
 
 
+@app.route("/logout", methods=['GET'])
+def logout():
+    session.clear()
+    flash('You have successfully logged out.')
+    return render_template("index.html")
+
+
 @app.route("/search", methods=['GET', 'POST'])
 def search():
     error = ""
@@ -109,17 +124,18 @@ def books(isbn):
 @app.route("/api/book/<string:isbn>", methods=['GET'])
 def books_api(isbn):
 
-      # Make sure flight exists.
     book = db.execute("SELECT * FROM books where isbn=:isbn",
                       {"isbn": isbn}).fetchone()
+
     if book is None:
         return jsonify({"error": "Invalid isbn"}), 404
 
-    return jsonify({
-        "title": book.title,
-        "author": book.author,
-        "year": book.year,
-        "isbn": book.isbn
-        # "review_count": db.execute("SELECT review_count from books where isbn=:isbn {"isbn": isbn}).fetchall()
-        # "average_score": db.execute("SELECT title from books where isbn=:isbn {"isbn": isbn}).fetchall()
-    })
+    review_data = review_counts(isbn)
+
+    return jsonify(
+        tite=book.title,
+        author=book.author,
+        year=book.year,
+        review_count=review_data['reviews_count'],
+        average_score=review_data['average_rating']
+    )
