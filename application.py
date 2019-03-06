@@ -113,12 +113,14 @@ def search():
 def result():
     return render_template("result.html")
 
-
+# need to fix review functionality
 @app.route("/books/<string:isbn>", methods=['GET', 'POST'])
 def books(isbn):
     data = db.execute("SELECT * FROM books WHERE isbn=:isbn",
                       {"isbn": isbn}).fetchall()
-    return render_template("books.html", book=data[0])
+    r_data = db.execute("SELECT * FROM reviews WHERE isbn=:isbn",
+                        {"isbn:isbn"}).fetchall()
+    return render_template("books.html", book=data[0], reviews=r_data[0])
 
 
 @app.route("/api/book/<string:isbn>", methods=['GET'])
