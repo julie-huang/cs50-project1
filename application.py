@@ -113,26 +113,44 @@ def search():
 def result():
     return render_template("result.html")
 
+
+@app.route("/submit")
+def submit():
+    return render_template("submit.html")
+
 # need to fix review functionality
-@app.route("/books/<string:isbn>", methods=['GET', 'POST'])
+@app.route("/books/<string:isbn>")
 def books(isbn):
     data = db.execute("SELECT * FROM books WHERE isbn=:isbn",
-                      {"isbn": isbn}).fetchall()
-    r_data = db.execute("SELECT * FROM reviews WHERE isbn=:isbn",
-                        {"isbn:isbn"}).fetchall()
-    return render_template("books.html", book=data[0], reviews=r_data[0])
+                       {"isbn": isbn}).fetchall()
+                      # r_data = db.execute("SELECT * FROM reviews WHERE isbn=:isbn",
+                      #                    {"isbn:isbn"}).fetchall()
+    reviews = db.execute(
+        ("SELECT * from reviews WHERE book_id=(:isbn)"), {"isbn": isbn}).fetchall()
+   
+    username = session.get('username', 'Anon')
+
+    reviewed = db.execute(('SELECT review FROM reviews'
+        ' WHERE username =(:username) AND book_id = (:isbn)'),
+        {'username': username, 'isbn': isbn}).fetchall()
+
+    REVIEWED_FLAG=False
+
+    if reviewed:
+        REVIEWED_FLAG=True
+    return render_template('books.html', book = data[0], reviews = reviews, reviewed = REVIEWED_FLAG, review_nums = review_counts(isbn))
 
 
-@app.route("/api/book/<string:isbn>", methods=['GET'])
+@app.route("/api/book/<string:isbn>", methods = ['GET'])
 def books_api(isbn):
 
-    book = db.execute("SELECT * FROM books where isbn=:isbn",
+    book=db.execute("SELECT * FROM books where isbn=:isbn",
                       {"isbn": isbn}).fetchone()
 
     if book is None:
         return jsonify({"error": "Invalid isbn"}), 404
 
-    review_data = review_counts(isbn)
+    review_data=review_counts(isbn)
 
     return jsonify(
         tite=book.title,
