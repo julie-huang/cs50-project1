@@ -2,7 +2,9 @@
 
 <https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/>
 
-#### Book Review Website 
+#### Book Review Website [WORK IN PROGRESS]
+
+![](sample.gif)
 
 #### To set up the database: 
 
